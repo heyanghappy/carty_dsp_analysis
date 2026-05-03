@@ -10,7 +10,7 @@ import requests
 
 # 飞书配置
 FEISHU_APP_ID = "cli_a912ec6b53f8dcc1"
-FEISHU_APP_SECRET = "WhxP812QPaXW5HoVepuLUdkeb7 ETzBoC"
+FEISHU_APP_SECRET = "WhxP812QPaXW5HoVepuLUdkeb7ETzBoC"
 FEISHU_OPEN_ID = "ou_02adad263d6f1d91a66e00367d3b8567"
 
 
