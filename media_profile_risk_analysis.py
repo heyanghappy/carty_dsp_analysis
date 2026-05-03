@@ -13,6 +13,7 @@ import io
 import os
 import sys
 from datetime import datetime, timedelta
+from feishu_notify import send_to_feishu
 
 OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 OSS_ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
@@ -43,8 +44,8 @@ RISK_LEVEL_FIELDS = {
     'rl_final_beta':       '最终风险等级(Beta)',
     'rl_imp_fraud':        '展示作弊风险',
     'rl_click_fraud':      '点击作弊风险',
-    'rl_af_reject':        'AF拒绝风险',
-    'rl_afPA_reject':      'AF PA拒绝风险',
+    'rl_game_af':        'AF拒绝风险',
+    'rl_game_adjust':      'AF PA拒绝风险',
     'rl_bundle_af_reject': 'Bundle AF拒绝风险',
     'rl_bundle':           'Bundle风险',
     'rl_bundle_downloads': 'Bundle下载量风险',
@@ -419,6 +420,13 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(report)
     print(f"\n✅ 报告已保存: {output_file}")
+
+    # 发送到飞书
+    title = f"📊 媒体画像风险分析 {dt}_{hh}"
+    if send_to_feishu(title, report):
+        print("✅ 已发送到飞书")
+    else:
+        print("❌ 飞书发送失败")
 
 if __name__ == "__main__":
     try:

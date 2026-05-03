@@ -14,6 +14,7 @@ import pandas as pd
 import pymysql
 import sys
 from datetime import datetime, timedelta
+from feishu_notify import send_to_feishu
 
 SR_HOST = "fe-c-907795efe3201917.starrocks.aliyuncs.com"
 SR_PORT = 9030
@@ -59,7 +60,7 @@ ADV_INFO = {
 HIGH_REJECT_THRESHOLD = 0.10
 BUNDLE_DETAIL_LIMIT = 50
 
-RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_bundle_downloads', 'rl_af_reject', 'rl_afPA_reject',
+RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_bundle_downloads', 'rl_game_af', 'rl_game_adjust',
                'rl_imp_fraud', 'rl_click_fraud', 'rl_soigame', 'rl_anura',
                'rl_visible_imp', 'rl_unintent_click', 'rl_N_ctr']
 
@@ -121,8 +122,8 @@ def rl_vals(row):
         rl_final_fmt(rl),
         fv(row.get('rl_bundle')),
         fv(row.get('rl_bundle_downloads')),
-        fv(row.get('rl_af_reject')),
-        fv(row.get('rl_afPA_reject')),
+        fv(row.get('rl_game_af')),
+        fv(row.get('rl_game_adjust')),
         fv(row.get('rl_imp_fraud')),
         fv(row.get('rl_click_fraud')),
         fv(row.get('rl_soigame')),
@@ -552,8 +553,8 @@ def main():
     lines.append("| rl_final | 媒体综合风险评分 (0=无风险, 100=最高风险) |")
     lines.append("| rl_bundle | Bundle 维度风险评分 |")
     lines.append("| rl_bundle_downloads | Bundle 下载量风险评分 |")
-    lines.append("| rl_af_reject | AF 拒绝率风险评分 |")
-    lines.append("| rl_afPA_reject | AF PA 风险评分 |")
+    lines.append("| rl_game_af | AF 拒绝率风险评分 |")
+    lines.append("| rl_game_adjust | AF PA 风险评分 |")
     lines.append("| rl_imp_fraud | 曝光欺诈风险评分 |")
     lines.append("| rl_click_fraud | 点击欺诈风险评分 |")
     lines.append("| rl_soigame | SOI Game 风险评分 |")
@@ -574,6 +575,13 @@ def main():
         f.write(report)
 
     print(f"✅ 报告已保存: {output_file}")
+
+    # 发送到飞书
+    title = f"📊 AF/Adjust 拒绝率日报 {date_suffix}"
+    if send_to_feishu(title, report):
+        print("✅ 已发送到飞书")
+    else:
+        print("❌ 飞书发送失败")
 
 if __name__ == "__main__":
     try:

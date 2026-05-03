@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 
 sys.path.insert(0, '/home/node/.openclaw/workspace/repos/carty_dsp_analysis')
 from daily_cheat_report import ADV_INFO
+from feishu_notify import send_to_feishu
 
 SR_HOST = "fe-c-907795efe3201917.starrocks.aliyuncs.com"
 SR_PORT = 9030
@@ -30,7 +31,7 @@ MEDIA_PROFILE_TABLE = "dsp_TQ.dsp_tp.media_profile_final"
 
 HIGH_BAD_THRESHOLD = 10.0  # 高危广告主 bad 率阈值（%）
 
-RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_bundle_downloads', 'rl_af_reject', 'rl_afPA_reject',
+RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_bundle_downloads', 'rl_game_af', 'rl_game_adjust',
                'rl_imp_fraud', 'rl_click_fraud', 'rl_soigame', 'rl_anura',
                'rl_visible_imp', 'rl_unintent_click', 'rl_N_ctr']
 
@@ -64,8 +65,8 @@ def rl_vals(row):
         rl_final_fmt(row.get('rl_final')),
         fv(row.get('rl_bundle')),
         fv(row.get('rl_bundle_downloads')),
-        fv(row.get('rl_af_reject')),
-        fv(row.get('rl_afPA_reject')),
+        fv(row.get('rl_game_af')),
+        fv(row.get('rl_game_adjust')),
         fv(row.get('rl_imp_fraud')),
         fv(row.get('rl_click_fraud')),
         fv(row.get('rl_soigame')),
@@ -283,6 +284,13 @@ def main():
     print(f"✅ 报告已保存: {output_file}")
     print(f"   总检测量: {overall['total']:,}, bad率: {overall['bad_rate']}%, bundle: {len(aff_bundle_rows)}, aff: {len(aff_rows)}, adv: {len(adv_rows)}")
     print(f"   高危广告主: {len(high_bad_advs)} 个（bad率 ≥ {HIGH_BAD_THRESHOLD:.0f}%）")
+
+    # 发送到飞书
+    title = f"📊 Anura 检测报告日报 {dt}"
+    if send_to_feishu(title, report):
+        print("✅ 已发送到飞书")
+    else:
+        print("❌ 飞书发送失败")
 
 
 if __name__ == "__main__":

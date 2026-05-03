@@ -17,6 +17,7 @@ import io
 from datetime import datetime, timedelta
 import pyarrow.parquet as pq
 import oss2
+from feishu_notify import send_to_feishu
 
 sys.path.insert(0, '/home/node/.openclaw/workspace/repos/carty_dsp_analysis')
 from daily_cheat_report import ADV_INFO, ADV_GROUPS
@@ -428,6 +429,13 @@ def main():
         f.write('\n'.join(lines))
 
     print(f"✅ 报告已保存: {output_file}")
+
+    # 发送到飞书
+    title = f"📊 全广告主媒体风险分级 {dt_str}"
+    if send_to_feishu(title, '\n'.join(lines)):
+        print("✅ 已发送到飞书")
+    else:
+        print("❌ 飞书发送失败")
 
 
 if __name__ == '__main__':

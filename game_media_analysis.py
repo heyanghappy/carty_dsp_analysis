@@ -13,6 +13,7 @@ import io
 import os
 import sys
 from datetime import datetime, timedelta
+from feishu_notify import send_to_feishu
 
 SR_HOST = "fe-c-907795efe3201917.starrocks.aliyuncs.com"
 SR_PORT = 9030
@@ -38,7 +39,7 @@ ADV_INFO = {
     789: 'Bricks Legend', 790: 'Vizor Gold Miners', 792: 'Train Miner',
 }
 
-RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_af_reject', 'rl_af_pa',
+RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_game_af', 'rl_af_pa',
                'rl_imp_fraud', 'rl_click_fraud', 'rl_anura']
 
 def risk_label(v):
@@ -326,7 +327,7 @@ def main():
         show_df = show_df.sort_values('click_cnt', ascending=False).head(50)
 
         lines.append(f'### ADV {adv_id} - {name}\n')
-        lines.append('| Aff ID | Bundle | SSP | 曝光 | 点击 | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_af_reject | rl_af_pa | rl_imp_fraud | rl_click_fraud | rl_anura |')
+        lines.append('| Aff ID | Bundle | SSP | 曝光 | 点击 | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_game_af | rl_af_pa | rl_imp_fraud | rl_click_fraud | rl_anura |')
         lines.append('|--------|--------|-----|------|------|------|------|-----|--------|--------|----------|----------|-----------|--------------|----------|--------------|----------------|----------|')
 
         for _, r in show_df.iterrows():
@@ -339,7 +340,7 @@ def main():
                 f"{int(r['imp_cnt']):,} | {int(r['click_cnt']):,} | "
                 f"{int(r['pass_cnt'])} | {int(r['reject_cnt'])} | {int(r['pa_cnt'])} | "
                 f"{int(r['total_conv'])} | {ratio*100:.2f}% | {rl_str} | {risk_label(rl)} | "
-                f"{fv('rl_bundle')} | {fv('rl_af_reject')} | {fv('rl_af_pa')} | "
+                f"{fv('rl_bundle')} | {fv('rl_game_af')} | {fv('rl_af_pa')} | "
                 f"{fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
             )
         lines.append('')
@@ -351,7 +352,7 @@ def main():
         lines.append('> 无 rl_final ≥ 70 的高风险媒体\n')
     else:
         lines.append(f'> 共 {len(df_high)} 条高风险媒体\n')
-        lines.append('| ADV | Aff ID | Bundle | SSP | 曝光 | 点击 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_af_reject | rl_af_pa | rl_imp_fraud | rl_click_fraud | rl_anura |')
+        lines.append('| ADV | Aff ID | Bundle | SSP | 曝光 | 点击 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_game_af | rl_af_pa | rl_imp_fraud | rl_click_fraud | rl_anura |')
         lines.append('|-----|--------|--------|-----|------|------|--------|----------|----------|-----------|--------------|----------|--------------|----------------|----------|')
         for _, r in df_high.iterrows():
             def fv(f):
@@ -362,7 +363,7 @@ def main():
             lines.append(
                 f"| {int(r['adv_id'])} | {r['affiliate_id']} | {r['bundle_id']} | {r['first_ssp']} | "
                 f"{int(r['imp_cnt']):,} | {int(r['click_cnt']):,} | {ratio*100:.2f}% | "
-                f"{fv('rl_final')} | {risk_label(rl)} | {fv('rl_bundle')} | {fv('rl_af_reject')} | "
+                f"{fv('rl_final')} | {risk_label(rl)} | {fv('rl_bundle')} | {fv('rl_game_af')} | "
                 f"{fv('rl_af_pa')} | {fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
             )
     lines.append('')
@@ -375,7 +376,7 @@ def main():
         lines.append('> 无拒绝率 ≥ 30% 的媒体\n')
     else:
         lines.append(f'> 共 {len(df_high_rej)} 条高拒绝率媒体\n')
-        lines.append('| ADV | Aff ID | Bundle | SSP | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_af_reject | rl_af_pa | rl_imp_fraud | rl_click_fraud | rl_anura |')
+        lines.append('| ADV | Aff ID | Bundle | SSP | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_game_af | rl_af_pa | rl_imp_fraud | rl_click_fraud | rl_anura |')
         lines.append('|-----|--------|--------|-----|------|------|-----|--------|--------|----------|----------|-----------|--------------|----------|--------------|----------------|----------|')
         for _, r in df_high_rej.iterrows():
             rl = r.get('rl_final')
@@ -385,7 +386,7 @@ def main():
                 f"| {int(r['adv_id'])} | {r['affiliate_id']} | {r['bundle_id']} | {r['first_ssp']} | "
                 f"{int(r['pass_cnt'])} | {int(r['reject_cnt'])} | {int(r['pa_cnt'])} | "
                 f"{int(r['total_conv'])} | {r['reject_ratio']*100:.2f}% | {rl_str} | {risk_label(rl)} | "
-                f"{fv('rl_bundle')} | {fv('rl_af_reject')} | {fv('rl_af_pa')} | "
+                f"{fv('rl_bundle')} | {fv('rl_game_af')} | {fv('rl_af_pa')} | "
                 f"{fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
             )
     lines.append('')
@@ -395,6 +396,13 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(report)
     print(f'\n✅ 报告已保存: {output_file}')
+
+    # 发送到飞书
+    title = f'📊 游戏广告主媒体分析 {dt}'
+    if send_to_feishu(title, report):
+        print('✅ 已发送到飞书')
+    else:
+        print('❌ 飞书发送失败')
 
 if __name__ == '__main__':
     try:

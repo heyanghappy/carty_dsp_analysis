@@ -9,6 +9,7 @@ import pandas as pd
 import pymysql
 import sys
 from datetime import datetime, timedelta
+from feishu_notify import send_to_feishu
 
 SR_HOST = "fe-c-907795efe3201917.starrocks.aliyuncs.com"
 SR_PORT = 9030
@@ -474,6 +475,13 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(report)
     print(f'\n✅ 报告已保存: {output_file}')
+
+    # 发送到飞书
+    title = f'📊 游戏广告主风险分析 {dt}'
+    if send_to_feishu(title, report):
+        print('✅ 已发送到飞书')
+    else:
+        print('❌ 飞书发送失败')
 
 if __name__ == '__main__':
     try:
