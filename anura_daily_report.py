@@ -17,7 +17,7 @@ import pymysql
 import sys
 from datetime import datetime, timedelta
 
-sys.path.insert(0, '/Users/gztd-03-01457/Work/claude')
+sys.path.insert(0, '/home/node/.openclaw/workspace/repos/carty_dsp_analysis')
 from daily_cheat_report import ADV_INFO
 
 SR_HOST = "fe-c-907795efe3201917.starrocks.aliyuncs.com"
@@ -25,7 +25,7 @@ SR_PORT = 9030
 SR_USER = "sandy"
 SR_PASSWORD = "MXeptLkEkoi2$FMX"
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 MEDIA_PROFILE_TABLE = "dsp_TQ.dsp_tp.media_profile_final"
 
 HIGH_BAD_THRESHOLD = 10.0  # 高危广告主 bad 率阈值（%）

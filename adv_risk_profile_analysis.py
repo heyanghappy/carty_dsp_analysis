@@ -13,12 +13,12 @@ SR_PORT = 9030
 SR_USER = "sandy"
 SR_PASSWORD = "MXeptLkEkoi2$FMX"
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 
 # 风险等级字段
 RISK_FIELDS = [
-    'rl_final', 'rl_imp_fraud', 'rl_click_fraud', 'rl_af_reject', 
-    'rl_afPA_reject', 'rl_bundle', 'rl_soigame', 'rl_anura',
+    'rl_final', 'rl_imp_fraud', 'rl_click_fraud', 'rl_game_af', 
+    'rl_game_adjust', 'rl_bundle', 'rl_soigame', 'rl_anura',
     'rl_visible_imp', 'rl_unintent_click', 'rl_N_ctr'
 ]
 
@@ -26,8 +26,8 @@ RISK_NAMES = {
     'rl_final': '最终风险',
     'rl_imp_fraud': '曝光作弊',
     'rl_click_fraud': '点击作弊',
-    'rl_af_reject': 'AF拒绝',
-    'rl_afPA_reject': 'AF PA拒绝',
+    'rl_game_af': '游戏AF拒绝',
+    'rl_game_adjust': '游戏Adjust拒绝',
     'rl_bundle': 'Bundle',
     'rl_soigame': 'SOI Game',
     'rl_anura': 'Anura',

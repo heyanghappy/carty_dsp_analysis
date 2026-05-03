@@ -23,7 +23,7 @@ OSS_ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
 OSS_BUCKET = "alisg-pacdsp-bucket-lake-tq-prod-01"
 OSS_BASE_PATH = "dsp_tq/media_profile"
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 
 GAME_ADV_IDS = [82, 92, 274, 301, 530, 624, 657, 671, 673, 756, 760, 761, 766, 768, 769,
                 770, 771, 779, 780, 781, 782, 787, 788, 789, 790, 791, 792, 795, 796, 797,

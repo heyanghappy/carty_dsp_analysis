@@ -364,7 +364,7 @@ def main():
     report = "\n".join(report_lines)
 
     # 保存文件
-    filename = f"/Users/gztd-03-01457/Work/claude/data_log/daily_cheat_report_{end_dt}.md"
+    filename = f"/home/node/.openclaw/workspace/repos/carty_dsp_analysis/data_log/daily_cheat_report_{end_dt}.md"
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(report)
     print(f"✅ 报告已保存: {filename}")

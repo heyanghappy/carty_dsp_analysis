@@ -14,7 +14,7 @@ import os
 import sys
 from datetime import datetime, timedelta
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 OSS_ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
 OSS_BUCKET = "alisg-pacdsp-bucket-lake-tq-prod-01"
 OSS_BASE_PATH = "dsp_tq/media_profile/prod_snapshot"

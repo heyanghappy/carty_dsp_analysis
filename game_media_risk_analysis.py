@@ -15,7 +15,7 @@ SR_PORT = 9030
 SR_USER = "sandy"
 SR_PASSWORD = "MXeptLkEkoi2$FMX"
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 MEDIA_PROFILE_TABLE = "dsp_TQ.dsp_tp.media_profile_final"
 
 GAME_ADV_IDS = [82, 92, 274, 301, 530, 624, 657, 671, 673, 756, 760, 761, 766, 768, 769,
@@ -31,7 +31,7 @@ ADV_INFO = {
     789: 'Bricks Legend', 790: 'Vizor Gold Miners', 792: 'Train Miner',
 }
 
-RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_af_reject', 'rl_afPA_reject',
+RISK_FIELDS = ['rl_final', 'rl_bundle', 'rl_game_af', 'rl_game_adjust',
                'rl_imp_fraud', 'rl_click_fraud', 'rl_anura']
 
 def risk_label(v):
@@ -261,7 +261,7 @@ def main():
         show_df = show_df.sort_values('click_cnt', ascending=False).head(50)
 
         lines.append(f'### ADV {adv_id} - {name}\n')
-        lines.append('| Aff ID | Bundle | SSP | 曝光 | 点击 | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_af_reject | rl_afPA_reject | rl_imp_fraud | rl_click_fraud | rl_anura |')
+        lines.append('| Aff ID | Bundle | SSP | 曝光 | 点击 | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_game_af | rl_game_adjust | rl_imp_fraud | rl_click_fraud | rl_anura |')
         lines.append('|--------|--------|-----|------|------|------|------|-----|--------|--------|----------|----------|-----------|--------------|----------|--------------|----------------|----------|')
 
         for _, r in show_df.iterrows():
@@ -274,7 +274,7 @@ def main():
                 f"{int(r['imp_cnt']):,} | {int(r['click_cnt']):,} | "
                 f"{int(r['pass_cnt'])} | {int(r['reject_cnt'])} | {int(r['pa_cnt'])} | "
                 f"{int(r['total_conv'])} | {ratio*100:.2f}% | {rl_str} | {risk_label(rl)} | "
-                f"{fv('rl_bundle')} | {fv('rl_af_reject')} | {fv('rl_afPA_reject')} | "
+                f"{fv('rl_bundle')} | {fv('rl_game_af')} | {fv('rl_game_adjust')} | "
                 f"{fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
             )
         lines.append('')
@@ -286,7 +286,7 @@ def main():
         lines.append('> 无 rl_final ≥ 70 的高风险媒体\n')
     else:
         lines.append(f'> 共 {len(df_high)} 条高风险媒体\n')
-        lines.append('| ADV | Aff ID | Bundle | SSP | 曝光 | 点击 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_af_reject | rl_afPA_reject | rl_imp_fraud | rl_click_fraud | rl_anura |')
+        lines.append('| ADV | Aff ID | Bundle | SSP | 曝光 | 点击 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_game_af | rl_game_adjust | rl_imp_fraud | rl_click_fraud | rl_anura |')
         lines.append('|-----|--------|--------|-----|------|------|--------|----------|----------|-----------|--------------|----------|--------------|----------------|----------|')
         for _, r in df_high.iterrows():
             def fv(f):
@@ -297,8 +297,8 @@ def main():
             lines.append(
                 f"| {int(r['adv_id'])} | {r['affiliate_id']} | {r['bundle_id']} | {r['first_ssp']} | "
                 f"{int(r['imp_cnt']):,} | {int(r['click_cnt']):,} | {ratio*100:.2f}% | "
-                f"{fv('rl_final')} | {risk_label(rl)} | {fv('rl_bundle')} | {fv('rl_af_reject')} | "
-                f"{fv('rl_afPA_reject')} | {fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
+                f"{fv('rl_final')} | {risk_label(rl)} | {fv('rl_bundle')} | {fv('rl_game_af')} | "
+                f"{fv('rl_game_adjust')} | {fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
             )
     lines.append('')
 
@@ -310,7 +310,7 @@ def main():
         lines.append('> 无拒绝率 ≥ 30% 的媒体\n')
     else:
         lines.append(f'> 共 {len(df_high_rej)} 条高拒绝率媒体\n')
-        lines.append('| ADV | Aff ID | Bundle | SSP | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_af_reject | rl_afPA_reject | rl_imp_fraud | rl_click_fraud | rl_anura |')
+        lines.append('| ADV | Aff ID | Bundle | SSP | 通过 | 拒绝 | PA | 总转化 | 拒绝率 | rl_final | 风险等级 | rl_bundle | rl_game_af | rl_game_adjust | rl_imp_fraud | rl_click_fraud | rl_anura |')
         lines.append('|-----|--------|--------|-----|------|------|-----|--------|--------|----------|----------|-----------|--------------|----------|--------------|----------------|----------|')
         for _, r in df_high_rej.iterrows():
             rl = r.get('rl_final')
@@ -320,7 +320,7 @@ def main():
                 f"| {int(r['adv_id'])} | {r['affiliate_id']} | {r['bundle_id']} | {r['first_ssp']} | "
                 f"{int(r['pass_cnt'])} | {int(r['reject_cnt'])} | {int(r['pa_cnt'])} | "
                 f"{int(r['total_conv'])} | {r['reject_ratio']*100:.2f}% | {rl_str} | {risk_label(rl)} | "
-                f"{fv('rl_bundle')} | {fv('rl_af_reject')} | {fv('rl_afPA_reject')} | "
+                f"{fv('rl_bundle')} | {fv('rl_game_af')} | {fv('rl_game_adjust')} | "
                 f"{fv('rl_imp_fraud')} | {fv('rl_click_fraud')} | {fv('rl_anura')} |"
             )
     lines.append('')

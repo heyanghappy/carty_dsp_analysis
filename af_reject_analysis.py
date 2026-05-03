@@ -20,7 +20,7 @@ SR_PORT = 9030
 SR_USER = "sandy"
 SR_PASSWORD = "MXeptLkEkoi2$FMX"
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 MEDIA_PROFILE_TABLE = "dsp_TQ.dsp_tp.media_profile_final"
 ANTIFRAUD_CONFIG_TABLE = "dsp_TQ.dsp_tp.adv_antifraud_config"
 

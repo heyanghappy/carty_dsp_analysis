@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 import pyarrow.parquet as pq
 import oss2
 
-sys.path.insert(0, '/Users/gztd-03-01457/Work/claude')
+sys.path.insert(0, '/home/node/.openclaw/workspace/repos/carty_dsp_analysis')
 from daily_cheat_report import ADV_INFO, ADV_GROUPS
 
 SR_HOST = "fe-c-907795efe3201917.starrocks.aliyuncs.com"
@@ -31,7 +31,7 @@ OSS_BUCKET = "alisg-pacdsp-bucket-lake-tq-prod-01"
 OSS_BASE_PATH = "dsp_tq/media_profile/prod_snapshot"
 RISK_FIELDS = ['rl_final']
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis"
 
 
 def get_oss_bucket():

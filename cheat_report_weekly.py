@@ -24,7 +24,7 @@ SR_PORT = 9030
 SR_USER = "sandy"
 SR_PASSWORD = "MXeptLkEkoi2$FMX"
 
-OUTPUT_DIR = "/Users/gztd-03-01457/Work/claude/data_log"
+OUTPUT_DIR = "/home/node/.openclaw/workspace/repos/carty_dsp_analysis/data_log"
 
 
 def make_conn():
